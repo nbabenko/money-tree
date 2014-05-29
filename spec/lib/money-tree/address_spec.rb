@@ -59,4 +59,24 @@ describe MoneyTree::Address do
       %w(m n).should include(@address.to_s[0])
     end
   end
+
+  context "dogecoin" do
+    before do
+      @address = MoneyTree::Address.new network: :dogecoin
+    end
+
+    it "returns a dogecoin address" do
+      %w(D).should include(@address.to_s[0])
+    end
+  end
+
+  context "dogecoin testnet" do
+    before do
+      @address = MoneyTree::Address.new network: :dogecoin_testnet
+    end
+
+    it "returns a dogecoin testnet address" do
+      %w(n).should include(@address.to_s[0])
+    end
+  end
 end

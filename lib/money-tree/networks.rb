@@ -23,6 +23,32 @@ module MoneyTree
       compressed_wif_chars: %w(c),
       uncompressed_wif_chars: %w(9),
       protocol_version: 70001
+    },
+    dogecoin: {
+      address_version: '1e',
+      p2sh_version: '16',
+      p2sh_char: 'A',
+      privkey_compression_flag: '01',
+      privkey_version: '9e',
+      extended_privkey_version: "02fac398",
+      extended_pubkey_version: "02facafd",
+      compressed_wif_chars: %w(Q),
+      uncompressed_wif_chars: %w(6),
+      protocol_version: 70002
+    },
+    dogecoin_testnet: {
+      address_version: '71',
+      p2sh_version: 'c4',
+      p2sh_char: '2',
+      privkey_compression_flag: '01',
+      privkey_version: 'f1',
+      extended_privkey_version: "0432a243",
+      extended_pubkey_version: "0432a9a8",
+      compressed_wif_chars: %w(c),
+      uncompressed_wif_chars: %w(9),
+      protocol_version: 70002
     }
   }
+
+
 end

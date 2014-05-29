@@ -64,6 +64,108 @@ describe MoneyTree::Master do
         subnode.to_serialized_address.slice(0,4).should == 'tpub'
       end
     end
+    context "dogecoin" do
+      before do
+        @master = MoneyTree::Master.new network: :dogecoin
+      end
+
+      it "generates dogecoin address" do
+        %w(D).should include(@master.to_address[0])
+      end
+
+      it "generates dogecoin compressed wif" do
+        @master.private_key.to_wif[0].should == 'Q'
+      end
+
+      it "generates dogecoin uncompressed wif" do
+        @master.private_key.to_wif(compressed: false)[0].should == '6'
+      end
+
+      it "generates dogecoin serialized private address" do
+        @master.to_serialized_address(:private).slice(0, 4).should == "dgpv"
+      end
+
+      it "generates dogecoin serialized public address" do
+        @master.to_serialized_address.slice(0, 4).should == "dgub"
+      end
+
+      it "imports from dogecoin serialized private address" do
+        node = MoneyTree::Node.from_serialized_address 'dgpv51eADS3spNJh8AXonfPpXG1moNUxDs5JbehhastdAENe5SfuDQjorcUUtc3WdHrb8caZzUn1g2naE8TfGVzE6zTnyxeghV9qKHvEdPxaiNn'
+        node.to_serialized_address(:private).should == 'dgpv51eADS3spNJh8AXonfPpXG1moNUxDs5JbehhastdAENe5SfuDQjorcUUtc3WdHrb8caZzUn1g2naE8TfGVzE6zTnyxeghV9qKHvEdPxaiNn'
+      end
+
+      it "imports from dogecoin serialized public address" do
+        node = MoneyTree::Node.from_serialized_address 'dgub8kXBZ7ymNWy2R2Bxpu1ne7ZNFvrb3z71tFUujzHbxMRedVnbdBHaVut8TpkGgkk2ckZmxYd1EnGrrzc89kjoDVJpMYYWG3KL6ZW5ReWUUPa'
+        %w(D).should include(node.public_key.to_s[0])
+        node.to_serialized_address.should == 'dgub8kXBZ7ymNWy2R2Bxpu1ne7ZNFvrb3z71tFUujzHbxMRedVnbdBHaVut8TpkGgkk2ckZmxYd1EnGrrzc89kjoDVJpMYYWG3KL6ZW5ReWUUPa'
+      end
+
+      it "generates dogecoin subnodes from serialized private address" do
+        node = MoneyTree::Node.from_serialized_address 'dgpv51eADS3spNJh8AXonfPpXG1moNUxDs5JbehhastdAENe5SfuDQjorcUUtc3WdHrb8caZzUn1g2naE8TfGVzE6zTnyxeghV9qKHvEdPxaiNn'
+        subnode = node.node_for_path('1/1/1')
+        %w(D).should include(subnode.public_key.to_s[0])
+        subnode.to_serialized_address(:private).slice(0,4).should == 'dgpv'
+        subnode.to_serialized_address.slice(0,4).should == 'dgub'
+      end
+
+      it "generates dogecoin subnodes from serialized public address" do
+        node = MoneyTree::Node.from_serialized_address 'dgub8kXBZ7ymNWy2R2Bxpu1ne7ZNFvrb3z71tFUujzHbxMRedVnbdBHaVut8TpkGgkk2ckZmxYd1EnGrrzc89kjoDVJpMYYWG3KL6ZW5ReWUUPa'
+        subnode = node.node_for_path('1/1/1')
+        %w(D).should include(subnode.public_key.to_s[0])
+        subnode.to_serialized_address.slice(0,4).should == 'dgub'
+      end
+    end
+    context "dogecoin testnet" do
+      before do
+        @master = MoneyTree::Master.new network: :dogecoin_testnet
+      end
+
+      it "generates dogecoin testnet address" do
+        %w(n).should include(@master.to_address[0])
+      end
+
+      it "generates dogecoin testnet compressed wif" do
+        @master.private_key.to_wif[0].should == 'c'
+      end
+
+      it "generates dogecoin testnet uncompressed wif" do
+        @master.private_key.to_wif(compressed: false)[0].should == '9'
+      end
+
+      it "generates dogecoin testnet serialized private address" do
+        @master.to_serialized_address(:private).slice(0, 4).should == "tgpv"
+      end
+
+      it "generates dogecoin testnet serialized public address" do
+        @master.to_serialized_address.slice(0, 4).should == "tgub"
+      end
+
+      it "imports from dogecoin testnet serialized private address" do
+        node = MoneyTree::Node.from_serialized_address 'tgpv1aRS3XcGkbKXCdTFWR4bcJiwMtzDbJUj8FqpqfgDzPmRvFxhvRhuYs3AsqWB5n6UpkLXd8pJCCraG6iFnJh8z9X7U6a3SyVxiK1v9ibRKPJ'
+        node.to_serialized_address(:private).should == 'tgpv1aRS3XcGkbKXCdTFWR4bcJiwMtzDbJUj8FqpqfgDzPmRvFxhvRhuYs3AsqWB5n6UpkLXd8pJCCraG6iFnJh8z9X7U6a3SyVxiK1v9ibRKPJ'
+      end
+
+      it "imports from dogecoin testnet serialized public address" do
+        node = MoneyTree::Node.from_serialized_address 'tgub5KJTPDYAJjyrVV7QYegZjAGXpTMrRRWSQrd2zn5CnWpSUK5QLCFgCASpT4Cw9EyvJtKjbCfHkxLrtxrifZSi6eN8qgTs1XfTVabkx37JCZR'
+        %w(n).should include(node.public_key.to_s[0])
+        node.to_serialized_address.should == 'tgub5KJTPDYAJjyrVV7QYegZjAGXpTMrRRWSQrd2zn5CnWpSUK5QLCFgCASpT4Cw9EyvJtKjbCfHkxLrtxrifZSi6eN8qgTs1XfTVabkx37JCZR'
+      end
+
+      it "generates dogecoin testnet subnodes from serialized private address" do
+        node = MoneyTree::Node.from_serialized_address 'tgpv1aRS3XcGkbKXCdTFWR4bcJiwMtzDbJUj8FqpqfgDzPmRvFxhvRhuYs3AsqWB5n6UpkLXd8pJCCraG6iFnJh8z9X7U6a3SyVxiK1v9ibRKPJ'
+        subnode = node.node_for_path('1/1/1')
+        %w(n).should include(subnode.public_key.to_s[0])
+        subnode.to_serialized_address(:private).slice(0,4).should == 'tgpv'
+        subnode.to_serialized_address.slice(0,4).should == 'tgub'
+      end
+
+      it "generates dogecoin testnet subnodes from serialized public address" do
+        node = MoneyTree::Node.from_serialized_address 'tgub5KJTPDYAJjyrVV7QYegZjAGXpTMrRRWSQrd2zn5CnWpSUK5QLCFgCASpT4Cw9EyvJtKjbCfHkxLrtxrifZSi6eN8qgTs1XfTVabkx37JCZR'
+        subnode = node.node_for_path('1/1/1')
+        %w(n).should include(subnode.public_key.to_s[0])
+        subnode.to_serialized_address.slice(0,4).should == 'tgub'
+      end
+    end
 
     describe "Test vector 1" do
       describe "from a seed" do

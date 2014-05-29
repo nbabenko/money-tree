@@ -48,6 +48,14 @@ module MoneyTree
         { private_key: true, network: :bitcoin_testnet }
       when MoneyTree::NETWORKS[:bitcoin_testnet][:extended_pubkey_version]
         { private_key: false, network: :bitcoin_testnet }
+      when MoneyTree::NETWORKS[:dogecoin][:extended_privkey_version]
+        { private_key: true, network: :dogecoin }
+      when MoneyTree::NETWORKS[:dogecoin][:extended_pubkey_version]
+        { private_key: false, network: :dogecoin }
+      when MoneyTree::NETWORKS[:dogecoin_testnet][:extended_privkey_version]
+        { private_key: true, network: :dogecoin_testnet }
+      when MoneyTree::NETWORKS[:dogecoin_testnet][:extended_pubkey_version]
+        { private_key: false, network: :dogecoin_testnet }
       else 
         raise ImportError, 'invalid version bytes'
       end

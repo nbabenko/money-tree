@@ -180,4 +180,51 @@ describe MoneyTree::PublicKey do
       end
     end
   end
+
+  context "dogecoin" do
+    context 'with private key' do
+      before do
+        @private_key = MoneyTree::PrivateKey.new network: :dogecoin
+        @key = MoneyTree::PublicKey.new(@private_key)
+      end
+
+      it "should have an address starting with D" do
+        %w(D).should include(@key.to_s[0])
+      end
+    end
+
+    context 'without private key' do
+      before do
+        @key = MoneyTree::PublicKey.new('02fcba7ecf41bc7e1be4ee122d9d22e3333671eb0a3a87b5cdf099d59874e1940f', network: :dogecoin)
+      end
+
+      it "should have an address starting with D" do
+        %w(D).should include(@key.to_s[0])
+      end
+    end
+  end
+
+  context "dogecoin testnet" do
+    context 'with private key' do
+      before do
+        @private_key = MoneyTree::PrivateKey.new network: :dogecoin_testnet
+        @key = MoneyTree::PublicKey.new(@private_key)
+      end
+
+      it "should have an address starting with n" do
+        %w(n).should include(@key.to_s[0])
+      end
+    end
+
+    context 'without private key' do
+      before do
+        @key = MoneyTree::PublicKey.new('02fcba7ecf41bc7e1be4ee122d9d22e3333671eb0a3a87b5cdf099d59874e1940f', network: :dogecoin_testnet)
+      end
+
+      it "should have an address starting with n" do
+        %w(n).should include(@key.to_s[0])
+      end
+    end
+  end
+
 end
