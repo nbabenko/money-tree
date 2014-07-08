@@ -108,4 +108,26 @@ describe MoneyTree::PrivateKey do
       end
     end
   end
+  context "dogecoin" do
+    before do
+      @key = MoneyTree::PrivateKey.new key: 'QVBqSDTSLjKdjsWY5wjwqBYuVmkYYnNwgmifAVig74CkPfQtAFht'
+    end
+
+    describe "to_wif" do
+      it "returns same wif" do
+        @key.to_wif.should == 'QVBqSDTSLjKdjsWY5wjwqBYuVmkYYnNwgmifAVig74CkPfQtAFht'
+      end
+    end
+  end
+  context "dogecoin testnet" do
+    before do
+      @key = MoneyTree::PrivateKey.new key: 'ciD9iG4hCoyoKDPdry2cuStQuJXSHAQ5iyo3e4CkAsv4e8VE4WE6'
+    end
+
+    describe "to_wif" do
+      it "returns same wif" do
+        @key.to_wif.should == 'ciD9iG4hCoyoKDPdry2cuStQuJXSHAQ5iyo3e4CkAsv4e8VE4WE6'
+      end
+    end
+  end
 end

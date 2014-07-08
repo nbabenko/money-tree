@@ -103,9 +103,9 @@ module MoneyTree
 
     def parse_network_from_wif(wif, opts = {})
       networks = MoneyTree::NETWORKS
-      chars_key = opts[:compressed] ? :compressed_wif_chars : :uncompressed_wif_chars
-      @network_key = networks.keys.select do |k|
-        networks[k][chars_key].include?(wif.slice(0))
+      privkey_version = decode_base58(wif).slice(0..1)
+      network_key = networks.keys.select do |k|
+        networks[k][:privkey_version] == privkey_version
       end.first
       @network = networks[network_key]
     end
