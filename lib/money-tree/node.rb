@@ -1,3 +1,5 @@
+require "awesome_print"
+
 module MoneyTree
   class Node
     include Support
@@ -15,16 +17,27 @@ module MoneyTree
       opts.each { |k, v| instance_variable_set "@#{k}", v }
     end
     
-    def self.from_serialized_address(address)
+    def self.from_serialized_address(address, is_private = false, mutate_network = nil)
       hex = from_serialized_base58 address
-      version = from_version_hex hex.slice!(0..7)
-      self.new({
-        depth: hex.slice!(0..1).to_i(16),
-        fingerprint: hex.slice!(0..7),
-        index: hex.slice!(0..7).to_i(16),
-        chain_code: hex.slice!(0..63).to_i(16)
-      }.merge(key_options(hex, version)))
+
+      if !mutate_network.nil?
+        version = { private_key: is_private, network: mutate_network }
+        hex.slice!(0..7)
+      else
+        version = from_version_hex hex.slice!(0..7)
+      end
+
+      params = {
+          depth: hex.slice!(0..1).to_i(16),
+          fingerprint: hex.slice!(0..7),
+          index: hex.slice!(0..7).to_i(16),
+          chain_code: hex.slice!(0..63).to_i(16)
+      }.merge(key_options(hex, version))
+
+      self.new(params)
     end
+
+
     
     def self.key_options(hex, version)
       k_opts = { network: version[:network] }

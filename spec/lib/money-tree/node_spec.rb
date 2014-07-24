@@ -1,4 +1,5 @@
 require 'spec_helper'
+require "awesome_print"
 
 describe MoneyTree::Master do
   describe "initialize" do
@@ -892,6 +893,84 @@ describe MoneyTree::Master do
       end
     end
 
+    describe "importing from multicurrency public seed" do
+
+      # master = MoneyTree::Master.new
+      # ap master.private_key.to_wif
+      # ap master.to_address
+      # ap master.to_serialized_address
+
+      # @node = MoneyTree::Node.from_serialized_address(
+      #     "xpub661MyMwAqRbcFg7aba11tMn8bMe4o8Dv9iCsrb9Xzwf92jSFUwdqFwBEGWxsnDLbLrKwxGdTArM7ebynWeHhVF7sodTdEJvAiDdfToxc4Hx",
+      #     false, :bitcoin)
+      # ap @node
+      # @node.network_key.should == :dogecoin
+      # @node.private_key.should == nil
+      # @node.index.should == 2147483648
+      # @node.is_private?.should == true
+      # @node.depth.should == 1
+      # @node.public_key.to_hex.should == "035a784662a4a20a65bf6aab9ae98a6c068a81c52e4b032c0fb5400c706cfccc56"
+      # @node.chain_code_hex.should == "47fdacbd0f1097043b78c63c20c34ef4ed9a111d980047ad16282c7ae6236141"
+
+      # child = @node.node_for_path "m/0/1"
+      # ap child.to_address
+
+
+      ap "Generate master private key"
+      master = MoneyTree::Master.new
+      ap master.private_key.to_wif
+      ap master.to_serialized_address(:private)
+
+      ap "generate master dogecoin private key"
+      doge_master = MoneyTree::Master.new(seed: master.seed, network: :dogecoin)
+      ap doge_master.private_key.to_wif
+      ap doge_master.to_serialized_address(:private)
+
+      ap "Generate master public key"
+      extended_public_key = master.to_serialized_address
+      ap extended_public_key
+
+      ap "Generate master bitcoin address"
+      ap master.to_address
+
+      ap "Generate master dogecoin address"
+      ap doge_master.to_address
+
+      ap "generate child private key for bitcoin"
+      bitcoin_child = master.node_for_path "m/0"
+      ap bitcoin_child.private_key.to_wif
+
+      ap "generate child private key for dogecoin"
+      dogecoin_child = doge_master.node_for_path "m/0"
+      ap dogecoin_child.private_key.to_wif
+
+      ap "Generate child address for bitcoin"
+      ap bitcoin_child.to_address
+
+      ap "generate child address for dogecoin"
+      ap dogecoin_child.to_address
+
+      ap "import public master key"
+      imported_bitcoin_master = MoneyTree::Node.from_serialized_address(extended_public_key)
+      imported_dogecoin_master = MoneyTree::Node.from_serialized_address(extended_public_key, false, :dogecoin)
+
+      ap "Generate master address for bitcoin"
+      ap imported_bitcoin_master.to_address
+
+      ap "Generate master address for dogecoin"
+      ap imported_dogecoin_master.to_address
+
+      ap "Generate child address for bitcoin"
+      imported_bitcoin_child = imported_bitcoin_master.node_for_path "m/0"
+      ap imported_bitcoin_child.to_address
+
+      ap "Generate child address for dogecoin"
+      imported_dogecoin_child = imported_dogecoin_master.node_for_path "m/0"
+      ap imported_dogecoin_child.to_address
+
+      ap "Check that addresses from imported master key is the same as from seed"
+
+    end
 
   end
 end
